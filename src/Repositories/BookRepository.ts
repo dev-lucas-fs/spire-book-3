@@ -1,7 +1,7 @@
 import { connection } from '../Config';
-import { Credentials, Update } from '../Protocols';
+import { BookPromise, Credentials, Update } from '../Protocols';
 
-function getAll(limit: number = 20, name = '') {
+function getAll(limit: number = 20, name = ''): BookPromise {
     const queryParams: (string | number)[] = [limit];
     if (name) queryParams.push('%' + name + '%');
     console.log(name);
@@ -11,12 +11,12 @@ function getAll(limit: number = 20, name = '') {
     return connection.query(queryString, queryParams);
 }
 
-function getById(id: number) {
+function getById(id: number): BookPromise {
     const queryString = 'SELECT * FROM BOOKS WHERE ID = $1';
     return connection.query(queryString, [id]);
 }
 
-function getByName(name: string) {
+function getByName(name: string): BookPromise {
     const queryString = 'SELECT ID, NAME, TEXT FROM BOOKS WHERE NAME = $1';
     return connection.query(queryString, [name]);
 }
