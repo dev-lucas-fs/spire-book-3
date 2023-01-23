@@ -9,20 +9,20 @@ get -> book/all
 queries (opcional) = ?name=
 <br />
 return [{ name, text, id }]
-<br />
+<br /><br />
 get -> book/:name
 <br />
 return { name, text, id }
-<br />
+<br /><br />
 post -> book/create
 <br />
 body = { name, password }
 <br />
 return status_da_requisicao
-<br />
+<br /><br />
 put -> book/:id<br />
 body = { text, password }<br />
-return status_da_requisicao<br />
+return status_da_requisicao<br /><br />
 
 delete -> book/:id<br />
 body = { password }<br />
