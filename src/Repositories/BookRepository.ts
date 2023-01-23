@@ -5,7 +5,7 @@ function getAll(limit: number = 20, name = '') {
     const queryParams: (string | number)[] = [limit];
     if (name) queryParams.push('%' + name + '%');
     console.log(name);
-    const queryString = `SELECT * FROM BOOKS ${
+    const queryString = `SELECT ID, NAME, TEXT FROM BOOKS ${
         name ? 'WHERE NAME ILIKE $2' : ''
     } ORDER BY CREATED_AT LIMIT $1`;
     return connection.query(queryString, queryParams);
@@ -17,7 +17,7 @@ function getById(id: number) {
 }
 
 function getByName(name: string) {
-    const queryString = 'SELECT * FROM BOOKS WHERE NAME = $1';
+    const queryString = 'SELECT ID, NAME, TEXT FROM BOOKS WHERE NAME = $1';
     return connection.query(queryString, [name]);
 }
 
