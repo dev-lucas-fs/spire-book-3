@@ -1,1 +1,18 @@
-# HERMES API
+# BOOK SPIRAL API
+
+BOOK SPIRAL É UMA FORMA DE ARMAZENAR TEXTOS.
+OS TEXTOS PERTENCEM A ENTIDADE BOOK.
+CADA BOOK POSSUI UM NOME UNICO E UMA SENHA.
+A SENHA SÓ É NECESSÁRIA PARA EDITAR OU DELETAR O BOOK.
+
+ROTAS:
+
+get -> book/all
+
+get -> book/:name
+
+post -> book/create
+
+put -> book/:id
+
+delete -> book/:id
