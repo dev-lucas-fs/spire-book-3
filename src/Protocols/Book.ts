@@ -1,5 +1,3 @@
-import { QueryResult } from 'pg';
-
 type Book = {
     id: number;
     password?: string;
@@ -7,6 +5,21 @@ type Book = {
     text: string;
 };
 
-type BookPromise = Promise<QueryResult<Book>>;
+type Create = {
+    categoryId: number;
+    name: string;
+    password: string;
+};
 
-export { Book, BookPromise };
+type Delete = {
+    password: string;
+    id: number;
+};
+
+type Update = {
+    password: string;
+    text: string;
+    id: number;
+};
+
+export { Book, Delete, Update, Create };

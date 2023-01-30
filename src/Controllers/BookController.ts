@@ -1,4 +1,4 @@
-import { Credentials, Update } from '../Protocols';
+import { Create, Update } from '../Protocols';
 import {
     createBook,
     deleteBook,
@@ -24,21 +24,21 @@ async function getAll(req: Request, res: Response) {
 
 async function getByName(req: Request, res: Response) {
     const { name } = req.params;
-    console.log(name);
+    const { location } = req.headers;
     let getAllParams = { name: '' };
     if (name) getAllParams.name = String(name);
+    if (!location) return res.sendStatus(httpStatus.BAD_REQUEST);
     try {
-        const book = await getBookByName(getAllParams.name);
+        const book = await getBookByName(getAllParams.name, location);
         return res.status(httpStatus.OK).send(book);
     } catch (error) {
-        if (error.name === 'NotFoundError')
-            return res.sendStatus(httpStatus.NOT_FOUND);
+        if (error.name === 'NotFoundError') return res.send([]);
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
 async function create(req: Request, res: Response) {
-    const credentials = req.body as Credentials;
+    const credentials = req.body as Create;
 
     try {
         const response = await createBook(credentials);
@@ -46,12 +46,14 @@ async function create(req: Request, res: Response) {
     } catch (error) {
         if (error.name === 'ConflictError')
             return res.sendStatus(httpStatus.CONFLICT);
+        if (error.name === 'NotFoundError')
+            return res.sendStatus(httpStatus.NOT_FOUND);
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
 async function update(req: Request, res: Response) {
-    let { text, password } = req.body;
+    let { text, password } = req.body as Update;
     const { id } = req.params;
 
     try {
@@ -65,11 +67,12 @@ async function update(req: Request, res: Response) {
 
 async function deleteById(req: Request, res: Response) {
     const { id } = req.params;
-
+    console.log(id);
     try {
         const response = await deleteBook(Number(id));
         return res.sendStatus(httpStatus.OK);
     } catch (error) {
+        console.log(error);
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }

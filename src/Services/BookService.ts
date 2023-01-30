@@ -1,12 +1,15 @@
 import { ConflictError, NotFoundError } from '../Errors';
-import { Credentials, Update, Delete } from '../Protocols';
+import { Update, Delete, Create } from '../Protocols';
 import {
     create,
     deleteById,
+    findCategoryById,
     getAll,
     getById,
     getByName,
     updateById,
+    createAccess,
+    deleteAccess,
 } from '../Repositories';
 import bcrypt from 'bcrypt';
 
@@ -17,27 +20,35 @@ type getAllQueryParams = {
 
 async function getAllBooks(queryParams: getAllQueryParams) {
     const books = await getAll(queryParams.limit, queryParams.name);
-    return books.rows;
+    return books;
 }
 
-async function getBookByName(name: string) {
+async function getBookByName(name: string, location: string) {
     const response = await getByName(name);
-    if (response.rowCount > 0) return response.rows[0];
-    throw NotFoundError();
+    if (!response) throw NotFoundError();
+    await createAccess(location, response.id);
+    return response;
 }
 
-async function createBook(credentials: Credentials) {
-    const response = await getByName(credentials.name);
-    if (response.rowCount > 0) throw ConflictError();
+async function createBook(createInfo: Create) {
+    const response = await getByName(createInfo.name);
+    if (response) throw ConflictError();
 
-    const password = await bcrypt.hash(credentials.password, 10);
-    return await create({ name: credentials.name, password });
+    const category = await findCategoryById(createInfo.categoryId);
+    if (!category) throw NotFoundError();
+
+    const password = await bcrypt.hash(createInfo.password, 10);
+    return await create({
+        name: createInfo.name,
+        password,
+        categoryId: createInfo.categoryId,
+    });
 }
 
 async function isAuthorized(info: Delete) {
     const book = await getById(info.id);
-    if (book.rowCount === 0) throw NotFoundError();
-    const compare = await bcrypt.compare(info.password, book.rows[0].password);
+    if (!book) throw NotFoundError();
+    const compare = await bcrypt.compare(info.password, book.password);
     return compare;
 }
 
@@ -45,7 +56,10 @@ function updateBook(info: Update) {
     return updateById(info);
 }
 
-function deleteBook(id: number) {
+async function deleteBook(id: number) {
+    const book = await getById(id);
+    if (!book) throw NotFoundError();
+    await deleteAccess(id);
     return deleteById(id);
 }
 

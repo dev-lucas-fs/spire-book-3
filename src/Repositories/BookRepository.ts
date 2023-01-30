@@ -1,42 +1,81 @@
 import { connection } from '../Config';
-import { BookPromise, Credentials, Update } from '../Protocols';
+import { Create, Update } from '../Protocols';
 
-function getAll(limit: number = 20, name = ''): BookPromise {
-    const queryParams: (string | number)[] = [limit];
-    if (name) queryParams.push('%' + name + '%');
-    console.log(name);
-    const queryString = `SELECT ID, NAME, TEXT FROM BOOKS ${
-        name ? 'WHERE NAME ILIKE $2' : ''
-    } ORDER BY CREATED_AT LIMIT $1`;
-    return connection.query(queryString, queryParams);
+function getAll(limit: number = 20, name = '') {
+    return connection.book.findMany({
+        where: {
+            name: {
+                contains: name,
+            },
+        },
+        take: limit,
+        select: {
+            id: true,
+            category: true,
+            categoryId: true,
+            name: true,
+        },
+    });
 }
 
-function getById(id: number): BookPromise {
-    const queryString = 'SELECT * FROM BOOKS WHERE ID = $1';
-    return connection.query(queryString, [id]);
+function getById(id: number) {
+    return connection.book.findFirst({
+        where: {
+            id,
+        },
+        select: {
+            id: true,
+            category: true,
+            categoryId: true,
+            name: true,
+            text: true,
+            password: true,
+        },
+    });
 }
 
-function getByName(name: string): BookPromise {
-    const queryString = 'SELECT ID, NAME, TEXT FROM BOOKS WHERE NAME = $1';
-    return connection.query(queryString, [name]);
+function getByName(name: string) {
+    return connection.book.findFirst({
+        where: {
+            name,
+        },
+        select: {
+            id: true,
+            category: true,
+            categoryId: true,
+            name: true,
+            text: true,
+        },
+    });
 }
 
-function create(credentials: Credentials) {
-    const queryString = 'INSERT INTO BOOKS (NAME, PASSWORD) VALUES ($1, $2)';
-    return connection.query(queryString, [
-        credentials.name,
-        credentials.password,
-    ]);
+function create(createData: Create) {
+    return connection.book.create({
+        data: {
+            name: createData.name,
+            password: createData.password,
+            categoryId: createData.categoryId,
+        },
+    });
 }
 
 function updateById(info: Update) {
-    const queryString = 'UPDATE BOOKS SET TEXT = $1 WHERE ID = $2';
-    return connection.query(queryString, [info.text, info.id]);
+    return connection.book.update({
+        where: {
+            id: info.id,
+        },
+        data: {
+            text: info.text,
+        },
+    });
 }
 
 function deleteById(id: number) {
-    const queryString = 'DELETE FROM BOOKS WHERE ID = $1';
-    return connection.query(queryString, [id]);
+    return connection.book.delete({
+        where: {
+            id,
+        },
+    });
 }
 
 export { updateById, deleteById, getAll, getByName, getById, create };
