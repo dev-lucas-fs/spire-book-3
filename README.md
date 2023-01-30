@@ -22,7 +22,7 @@ Rotas da API
 	name : string
   ```
 - Response
-```javascript
+```
 	[
 		{ 
 			id: number, 
@@ -34,13 +34,13 @@ Rotas da API
 
 #### Listar book pelo nome [ GET ] [ "/book/:name" ]
 - Headers
-```json
+```
 	{
 		location: string
 	}
 ```
 - Response
-```javascript
+```
 	{ 
 		id: number, 
 		name: string, 
@@ -51,7 +51,7 @@ Rotas da API
 
 #### Criar um book [ POST ] [ "/book/create" ]
 - Body
-```json
+```
 	{
 		name: string,
 		categoryId: number,
@@ -64,7 +64,7 @@ Rotas da API
 
 #### Criar um book [ PUT ] [ "/book/:id" ]
 - Body
-```json
+```
 	{
 		text: string
 		password: string
@@ -75,7 +75,7 @@ Rotas da API
 
 #### Criar um book [ Delete ] [ "/book/:id" ]
 - Body
-```json
+```
 	{
 		password: string
 	}
@@ -86,7 +86,7 @@ Rotas da API
 
 #### Listar todas as categorias [ GET ] [ "/category/all" ]
 - Response
-```javascript
+```
 	[
 		{ 
 			id: number, 
@@ -97,7 +97,7 @@ Rotas da API
 
 #### Listar categoria pelo id [ GET ] [ "/category/:id" ]
 - Response
-```javascript
+```
 	{ 
 		id: number, 
 		name: string, 
@@ -106,14 +106,14 @@ Rotas da API
 
 #### Criar uma categoria [ POST ] [ "/category/create" ]
 - Body
-```json
+```
 	{
 		name: string,
 	}
 ```
 
 - Response
-```json
+```
 	{
 		id: number,
 		name: string
