@@ -1,50 +1,123 @@
-# SPIRE BOOK API
+# SPIRE BOOK API DOCUMENTATION
 
-SPIRE BOOK É UM APP PARA ARMAZENAMENTO DE TEXTO.
+## CONFIGURAÇÕES INICIAIS
+1. <b>Clone o projeto
+2. <b>Instale as dependências
+```bash
+	npm i
+```
+3. <b>Execute as migrações
+```bash
+	npx prisma migrate dev	
+```
+4. <b>Rodar o projeto
+```bash
+	npm run dev
+```
+## ROTAS
+Rotas da API
+#### Listar todos os books [ GET ] [ "/book/all" ]
+- Query
+```
+	name : string
+  ```
+- Response
+```javascript
+	[
+		{ 
+			id: number, 
+			name: string, 
+			categoryId: number 
+		}
+	]
+``` 
 
-ROTAS:
+#### Listar book pelo nome [ GET ] [ "/book/:name" ]
+- Headers
+```json
+	{
+		location: string
+	}
+```
+- Response
+```javascript
+	{ 
+		id: number, 
+		name: string, 
+		categoryId: number,
+		text: string
+	}
+``` 
 
-get -> book/all
-<br />
-queries (opcional) = ?name=
-<br />
-return [{ name, text, id }]
-<br /><br />
-get -> book/:name
-<br />
-header = location : string
-<br />
-return { name, text, id }
-<br /><br />
-post -> book/create
-<br />
-body = { name, password, categoryId: number }
-<br />
-return status_da_requisicao
-<br /><br />
-put -> book/:id<br />
-body = { text, password }<br />
-return status_da_requisicao<br /><br />
+#### Criar um book [ POST ] [ "/book/create" ]
+- Body
+```json
+	{
+		name: string,
+		categoryId: number,
+		password: string
+	}
+```
 
-delete -> book/:id<br />
-body = { password }<br />
-return status_da_requisicao
+- Response
+	 - Status code
 
-<br />
-<br />
-<br />
-get -> category/all
-<br />
-return [{id: number, name: string}]
-<br />
-get -> category/:id
-<br />
-return {id: number, name: string}
-<br />
-post -> category/create
-<br />
-body: { name: string }
-<br />
-return {id: number, name: string}
+#### Criar um book [ PUT ] [ "/book/:id" ]
+- Body
+```json
+	{
+		text: string
+		password: string
+	}
+```
+- Response
+	 - Status code
+
+#### Criar um book [ Delete ] [ "/book/:id" ]
+- Body
+```json
+	{
+		password: string
+	}
+```
+- Response
+	 - Status code
+
+
+#### Listar todas as categorias [ GET ] [ "/category/all" ]
+- Response
+```javascript
+	[
+		{ 
+			id: number, 
+			name: string
+		}
+	]
+``` 
+
+#### Listar categoria pelo id [ GET ] [ "/category/:id" ]
+- Response
+```javascript
+	{ 
+		id: number, 
+		name: string, 
+	}
+``` 
+
+#### Criar uma categoria [ POST ] [ "/category/create" ]
+- Body
+```json
+	{
+		name: string,
+	}
+```
+
+- Response
+```json
+	{
+		id: number,
+		name: string
+	}
+```
 
 
