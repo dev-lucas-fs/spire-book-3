@@ -1,4 +1,4 @@
-import { ConflictError, NotFoundError } from '../Errors';
+import { ConflictError, NotFoundError, UnAuthorizedError } from '../Errors';
 import { Update, Delete, Create } from '../Protocols';
 import {
     create,
@@ -25,7 +25,7 @@ async function getAllBooks(queryParams: getAllQueryParams) {
 
 async function getBookByName(name: string, location: string) {
     const response = await getByName(name);
-    if (!response) throw NotFoundError();
+    if (response === null) throw NotFoundError();
     await createAccess(location, response.id);
     return response;
 }
@@ -38,6 +38,7 @@ async function createBook(createInfo: Create) {
     if (!category) throw NotFoundError();
 
     const password = await bcrypt.hash(createInfo.password, 10);
+
     return await create({
         name: createInfo.name,
         password,
@@ -49,16 +50,21 @@ async function isAuthorized(info: Delete) {
     const book = await getById(info.id);
     if (!book) throw NotFoundError();
     const compare = await bcrypt.compare(info.password, book.password);
+    console.log(compare, info.password, book.password);
     return compare;
 }
 
-function updateBook(info: Update) {
+async function updateBook(info: Update) {
+    const book = await getById(info.id);
+    if (!book) throw NotFoundError();
+
     return updateById(info);
 }
 
-async function deleteBook(id: number) {
+async function deleteBook(id: number, password: string) {
     const book = await getById(id);
     if (!book) throw NotFoundError();
+
     await deleteAccess(id);
     return deleteById(id);
 }

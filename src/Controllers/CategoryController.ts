@@ -18,7 +18,6 @@ async function getCategories(req: Request, res: Response) {
 async function getCategoryById(req: Request, res: Response) {
     const { id } = req.params;
     try {
-        console.log(id);
         const category = await findById(Number(id));
         return res.status(httpStatus.OK).send(category);
     } catch (error) {
@@ -26,7 +25,6 @@ async function getCategoryById(req: Request, res: Response) {
             return res.status(httpStatus.NOT_FOUND);
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
-    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
 }
 
 type createCategory = {
@@ -35,6 +33,7 @@ type createCategory = {
 
 async function postCreateCategory(req: Request, res: Response) {
     const { name } = req.body as createCategory;
+    if (!name) return res.sendStatus(httpStatus.BAD_REQUEST);
     try {
         const category = await create(name);
         return res.status(httpStatus.CREATED).send(category);

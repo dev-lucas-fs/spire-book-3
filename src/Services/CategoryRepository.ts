@@ -7,9 +7,9 @@ import {
 import { ConflictError, NotFoundError } from '../Errors';
 
 async function create(name: string) {
-    console.log('ss');
     const category = await findCategoryByName(name);
-    if (category) return ConflictError();
+
+    if (category) throw ConflictError();
     const newCategory = await createCategory(name);
     return newCategory;
 }

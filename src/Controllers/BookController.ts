@@ -55,24 +55,33 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     let { text, password } = req.body as Update;
     const { id } = req.params;
-
+    console.log(id);
     try {
         const response = await updateBook({ text, password, id: Number(id) });
         return res.sendStatus(httpStatus.OK);
     } catch (error) {
-        console.log(error);
+        if (error.name === 'NotFoundError')
+            return res.sendStatus(httpStatus.NOT_FOUND);
+
+        if (error.name === 'UnauthorizedError')
+            return res.sendStatus(httpStatus.UNAUTHORIZED);
+
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
 async function deleteById(req: Request, res: Response) {
     const { id } = req.params;
-    console.log(id);
+    const { password } = req.body;
     try {
-        const response = await deleteBook(Number(id));
+        const response = await deleteBook(Number(id), password);
         return res.sendStatus(httpStatus.OK);
     } catch (error) {
-        console.log(error);
+        if (error.name === 'NotFoundError')
+            return res.sendStatus(httpStatus.NOT_FOUND);
+
+        if (error.name === 'UnauthorizedError')
+            return res.sendStatus(httpStatus.UNAUTHORIZED);
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -12,3 +12,5 @@ app.use('/book', bookRoutes)
     .use(HandleErrorMiddleware);
 
 app.listen(process.env.PORT || 4000);
+
+export default app;
