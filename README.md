@@ -14,6 +14,11 @@
 ```bash
 	npm run dev
 ```
+
+## RODAR TESTES
+1. <b>npm run test category
+2. <b>npm run test book
+
 ## ROTAS
 Rotas da API
 #### Listar todos os books [ GET ] [ "/book/all" ]
