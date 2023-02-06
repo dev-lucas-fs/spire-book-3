@@ -81,7 +81,7 @@ describe('POST /category', () => {
 
     it('should respond with status 201', async () => {
         const response = await server.post('/category/create').send({
-            name: 'titulo',
+            name: 'titulo2',
         });
         expect(response.status).toEqual(201);
     });
