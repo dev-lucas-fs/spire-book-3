@@ -16,8 +16,8 @@
 ```
 
 ## RODAR TESTES
-1. <b>npm run test category
-2. <b>npm run test book
+1. <b>npm run test category.test
+2. <b>npm run test book.test
 
 ## ROTAS
 Rotas da API
